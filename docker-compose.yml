@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  f1-app:
+    build: .
+    container_name: f1-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./cache:/app/cache
+    environment:
+      - PYTHONUNBUFFERED=1

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 Race Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.plot.ly/plotly-2.24.2.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>F1 Race Results</h1>
+
+    <div style="text-align:center;">
+        <label for="season">Sélectionnez l'année :</label>
+        <select id="season"></select>
+        <button onclick="loadData()">Charger</button>
+    </div>
+
+    <h2>Classement pilotes</h2>
+    <div id="drivers-table"></div>
+
+    <h2>Classement constructeurs</h2>
+    <div id="constructors-table"></div>
+
+    <h2>Évolution des points course par course</h2>
+    <div id="points-graph"></div>
+
+    <h2>Stats pilotes (victoires, podiums, abandons)</h2>
+    <div id="stats-table"></div>
+</div>
+
+<script>
+const seasonSelect = document.getElementById("season");
+
+for(let y=2025; y>=1950; y--) {
+    let opt = document.createElement("option");
+    opt.value = y;
+    opt.text = y;
+    seasonSelect.appendChild(opt);
+}
+
+async function loadData() {
+    const season = seasonSelect.value;
+
+    let res = await fetch(`/standings/drivers?season=${season}`);
+    displayDriverStandings(await res.json());
+
+    res = await fetch(`/standings/constructors?season=${season}`);
+    displayConstructorStandings(await res.json());
+
+    res = await fetch(`/races/points?season=${season}`);
+    displayPointsGraph(await res.json());
+
+    res = await fetch(`/stats/pilots?season=${season}`);
+    displayPilotStats(await res.json());
+}
+
+function displayDriverStandings(data) {
+    const tableDiv = document.getElementById("drivers-table");
+    const races = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+    let html = "<table><tr><th>Position</th><th>Pilote</th><th>Points</th></tr>";
+    for(let d of races) {
+        let name = d.Driver.givenName + " " + d.Driver.familyName;
+        html += `<tr><td>${d.position}</td><td>${name}</td><td>${d.points}</td></tr>`;
+    }
+    html += "</table>";
+    tableDiv.innerHTML = html;
+}
+
+function displayConstructorStandings(data) {
+    const tableDiv = document.getElementById("constructors-table");
+    const constructors = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+    let html = "<table><tr><th>Position</th><th>Constructeur</th><th>Points</th></tr>";
+    for(let c of constructors) {
+        html += `<tr><td>${c.position}</td><td>${c.Constructor.name}</td><td>${c.points}</td></tr>`;
+    }
+    html += "</table>";
+    tableDiv.innerHTML = html;
+}
+
+function displayPointsGraph(pointsData) {
+    let races = Object.keys(pointsData);
+    races.sort((a,b) => new Date(b) - new Date(a));
+
+    const drivers = new Set();
+    for(let r of races) Object.keys(pointsData[r]).forEach(d => drivers.add(d));
+
+    let traces = [];
+    drivers.forEach(driver => {
+        let y = races.map(r => pointsData[r][driver] || 0);
+        traces.push({ x: races, y: y, mode: 'lines+markers', name: driver });
+    });
+
+    Plotly.newPlot('points-graph', traces, { 
+        title: 'Évolution des points', 
+        xaxis: { title: 'Courses' }, 
+        yaxis: { title: 'Points' } 
+    });
+}
+
+function displayPilotStats(statsData) {
+    const tableDiv = document.getElementById("stats-table");
+    let html = "<table><tr><th>Pilote</th><th>Victoires</th><th>Podiums</th><th>Abandons</th></tr>";
+    for(let driver in statsData) {
+        let s = statsData[driver];
+        html += `<tr><td>${driver}</td><td>${s.wins}</td><td>${s.podiums}</td><td>${s.retirements}</td></tr>`;
+    }
+    html += "</table>";
+    tableDiv.innerHTML = html;
+}
+</script>
+</body>
+</html>
