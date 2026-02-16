@@ -3,7 +3,6 @@ Data analysis project based on Formula 1 race results using the Jolpica API.
 
 # TODO
 
-- find another way to display the evolution of points per race
-- correct the stats of the pilots who are currently wrong
-- fix the undifined problem for certain positions (drivers and teams)
+- fix the incomplete season problem (evolution of points graph is missing race, stats for pilots doesnt show for certains years)
+- fix the undefined problem for certain positions (drivers and teams)
 - improve the css
