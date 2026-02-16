@@ -88,8 +88,20 @@ function displayPointsGraph(pointsData) {
 
     let traces = [];
     drivers.forEach(driver => {
-        let y = races.map(r => pointsData[r][driver] || 0);
-        traces.push({ x: races, y: y, mode: 'lines+markers', name: driver });
+        let lastValue = 0;
+        let y = races.map(r => {
+            if (pointsData[r][driver] !== undefined) {
+                lastValue = pointsData[r][driver];
+            }
+            return lastValue;
+        });
+
+        traces.push({
+            x: races,
+            y: y,
+            mode: 'lines+markers',
+            name: driver
+        });
     });
 
     Plotly.newPlot('points-graph', traces, { 
