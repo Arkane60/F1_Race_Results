@@ -1,57 +1,208 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #212529;
-    margin: 20px;
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-h1, h2 {
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+h1 {
     text-align: center;
-    color: #b30000;
+    color: #ff0000;
+    font-size: 4em;
+    margin-bottom: 50px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px #ff0000;
+    padding: 20px 0;
 }
 
-select, button {
-    padding: 8px;
-    font-size: 16px;
-    margin: 10px 5px;
+h2 {
+    color: #ff0000;
+    font-size: 1.8em;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.controls {
+    background: #1a1a1a;
+    border: 3px solid #ff0000;
+    border-radius: 15px;
+    padding: 40px;
+    margin-bottom: 50px;
+    text-align: center;
+    box-shadow: 0 0 30px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.controls label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+select {
+    padding: 15px 20px;
+    font-size: 1em;
+    background: #222222;
+    color: #fff;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 250px;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-right: 15px;
+}
+
+select:hover {
+    background: #333333;
+    box-shadow: 0 0 20px #ff0000;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 20px #ff0000;
 }
 
 button {
-    background-color: #b30000;
-    color: white;
+    padding: 15px 50px;
+    font-size: 1.1em;
+    background: #ff0000;
+    color: #000;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px #ff0000;
 }
 
 button:hover {
-    background-color: #d63333;
+    background: #ff3333;
+    box-shadow: 0 0 30px #ff0000, 0 0 50px #ff0000;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
-}
-
-table th, table td {
-    border: 1px solid #dee2e6;
-    padding: 8px;
-    text-align: center;
+    margin-bottom: 50px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px #ff0000;
+    border: 2px solid #ff0000;
 }
 
 table th {
-    background-color: #b30000;
-    color: white;
+    background: #ff0000;
+    color: #000;
+    padding: 20px 15px;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.95em;
+}
+
+table td {
+    padding: 18px 15px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+table tbody tr {
+    transition: all 0.2s;
+}
+
+table tbody tr:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 #points-graph {
     width: 100%;
-    height: 500px;
-    margin-bottom: 30px;
+    height: 730px;
+    margin-bottom: 50px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 10px;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 20px #ff0000;
+}
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+
+    h2 {
+        font-size: 1.4em;
+        margin-top: 30px;
+    }
+
+    .controls {
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    select {
+        display: block;
+        width: 100%;
+        margin: 0 0 15px 0;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    table th, table td {
+        padding: 12px 8px;
+        font-size: 0.9em;
+    }
+
+    #points-graph {
+        height: 400px;
+    }
 }

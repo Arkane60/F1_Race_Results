@@ -3,4 +3,4 @@ Data analysis project based on Formula 1 race results using the Jolpica API.
 
 # TODO
 
-- improve the css
+- write README and docstring

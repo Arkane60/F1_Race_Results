@@ -11,7 +11,7 @@
 <div class="container">
     <h1>F1 Stats Explorer</h1>
 
-    <div style="text-align:center;">
+    <div class="controls">
         <label for="season">Sélectionnez l'année :</label>
         <select id="season"></select>
         <button onclick="loadData()">Charger</button>
@@ -119,10 +119,31 @@ function displayPointsGraph(pointsData) {
     });
 
     Plotly.newPlot('points-graph', traces, { 
-        title: 'Évolution des points', 
-        xaxis: { title: 'Courses' }, 
-        yaxis: { title: 'Points' } 
-    });
+        title: {
+            text: 'Évolution des points',
+            font: { color: '#ff0000', size: 20, family: 'Segoe UI' }
+        },
+        xaxis: { 
+            title: 'Courses',
+            titlefont: { color: '#ff0000', size: 16 },
+            tickfont: { color: '#e8e8e8', size: 11 },
+            tickangle: -45,
+            gridcolor: '#333333',
+            zeroline: false
+        }, 
+        yaxis: { 
+            title: 'Points',
+            titlefont: { color: '#ff0000', size: 16 },
+            tickfont: { color: '#e8e8e8', size: 12 },
+            gridcolor: '#333333',
+            zeroline: false
+        },
+        plot_bgcolor: '#1a1a1a',
+        paper_bgcolor: 'transparent',
+        font: { color: '#e8e8e8', family: 'Segoe UI' },
+        hovermode: 'closest',
+        margin: { l: 55, r: 10, t: 60, b: 150 }
+    }, { responsive: true });
 }
 
 function displayPilotStats(statsData) {
