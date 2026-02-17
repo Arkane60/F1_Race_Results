@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>F1 Stats Explorer</title>
@@ -11,59 +11,79 @@
 <div class="container">
     <h1>F1 Stats Explorer</h1>
 
+    <!-- Controls for selecting the year -->
     <div class="controls">
-        <label for="season">Sélectionnez l'année :</label>
+        <label for="season">Select the year :</label>
         <select id="season"></select>
-        <button onclick="loadData()">Charger</button>
+        <button onclick="loadData()">Load</button>
     </div>
 
-    <h2>Classement pilotes</h2>
+    <!-- Driver standings table -->
+    <h2>Driver Standings</h2>
     <div id="drivers-table"></div>
 
-    <h2>Classement constructeurs</h2>
+    <!-- Constructor standings table -->
+    <h2>Constructor Standings</h2>
     <div id="constructors-table"></div>
 
-    <h2>Évolution des points course par course</h2>
+    <!-- Points evolution graph -->
+    <h2>Points evolution race by race</h2>
     <div id="points-graph"></div>
 
-    <h2>Stats pilotes (victoires, podiums, abandons)</h2>
+    <!-- Pilot statistics table -->
+    <h2>Pilot statistics (wins, podiums, retirements)</h2>
     <div id="stats-table"></div>
 </div>
 
 <script>
+// ----------------------
+// Initialization
+// ----------------------
 const seasonSelect = document.getElementById("season");
-
 const currentYear = new Date().getFullYear();
 
-for(let y = currentYear; y >= 1950; y--) {
+// Populate the year dropdown from currentYear down to 1950
+for (let y = currentYear; y >= 1950; y--) {
     let opt = document.createElement("option");
     opt.value = y;
     opt.text = y;
     seasonSelect.appendChild(opt);
 }
 
+// ----------------------
+// Load data from API
+// ----------------------
 async function loadData() {
     const season = seasonSelect.value;
 
+    // Driver standings
     let res = await fetch(`/standings/drivers?season=${season}`);
     displayDriverStandings(await res.json());
 
+    // Constructor standings
     res = await fetch(`/standings/constructors?season=${season}`);
     displayConstructorStandings(await res.json());
 
+    // Points evolution
     res = await fetch(`/races/points?season=${season}`);
     displayPointsGraph(await res.json());
 
+    // Pilot statistics
     res = await fetch(`/stats/pilots?season=${season}`);
     displayPilotStats(await res.json());
 }
 
+// ----------------------
+// Display functions
+// ----------------------
+
+// Populate driver standings table
 function displayDriverStandings(data) {
     const tableDiv = document.getElementById("drivers-table");
 
-    let html = "<table><tr><th>Position</th><th>Pilote</th><th>Points</th></tr>";
+    let html = "<table><tr><th>Position</th><th>Driver</th><th>Points</th></tr>";
 
-    for(let d of data) {
+    for (let d of data) {
         let name = d.Driver.givenName + " " + d.Driver.familyName;
         html += `<tr>
                     <td>${d.position || "-"}</td>
@@ -76,12 +96,13 @@ function displayDriverStandings(data) {
     tableDiv.innerHTML = html;
 }
 
+// Populate constructor standings table
 function displayConstructorStandings(data) {
     const tableDiv = document.getElementById("constructors-table");
 
-    let html = "<table><tr><th>Position</th><th>Constructeur</th><th>Points</th></tr>";
+    let html = "<table><tr><th>Position</th><th>Constructor</th><th>Points</th></tr>";
 
-    for(let c of data) {
+    for (let c of data) {
         html += `<tr>
                     <td>${c.position || "-"}</td>
                     <td>${c.Constructor.name}</td>
@@ -93,12 +114,13 @@ function displayConstructorStandings(data) {
     tableDiv.innerHTML = html;
 }
 
+// Display points evolution graph using Plotly
 function displayPointsGraph(pointsData) {
     let races = Object.keys(pointsData);
-    races.sort((a,b) => new Date(b) - new Date(a));
+    races.sort((a, b) => new Date(b) - new Date(a));
 
     const drivers = new Set();
-    for(let r of races) Object.keys(pointsData[r]).forEach(d => drivers.add(d));
+    for (let r of races) Object.keys(pointsData[r]).forEach(d => drivers.add(d));
 
     let traces = [];
     drivers.forEach(driver => {
@@ -120,11 +142,11 @@ function displayPointsGraph(pointsData) {
 
     Plotly.newPlot('points-graph', traces, { 
         title: {
-            text: 'Évolution des points',
+            text: 'Points evolution',
             font: { color: '#ff0000', size: 20, family: 'Segoe UI' }
         },
         xaxis: { 
-            title: 'Courses',
+            title: 'Races',
             titlefont: { color: '#ff0000', size: 16 },
             tickfont: { color: '#e8e8e8', size: 11 },
             tickangle: -45,
@@ -146,12 +168,18 @@ function displayPointsGraph(pointsData) {
     }, { responsive: true });
 }
 
+// Populate pilot statistics table
 function displayPilotStats(statsData) {
     const tableDiv = document.getElementById("stats-table");
-    let html = "<table><tr><th>Pilote</th><th>Victoires</th><th>Podiums</th><th>Abandons</th></tr>";
-    for(let driver in statsData) {
+    let html = "<table><tr><th>Driver</th><th>Wins</th><th>Podiums</th><th>Retirements</th></tr>";
+    for (let driver in statsData) {
         let s = statsData[driver];
-        html += `<tr><td>${driver}</td><td>${s.wins}</td><td>${s.podiums}</td><td>${s.retirements}</td></tr>`;
+        html += `<tr>
+                    <td>${driver}</td>
+                    <td>${s.wins}</td>
+                    <td>${s.podiums}</td>
+                    <td>${s.retirements}</td>
+                 </tr>`;
     }
     html += "</table>";
     tableDiv.innerHTML = html;
