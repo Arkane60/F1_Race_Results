@@ -92,7 +92,6 @@ def get_all_season_results(season: int):
 
     return all_races
 
-
 @lru_cache(maxsize=10)
 def get_points_progression(season: int):
     races = get_all_season_results(season)

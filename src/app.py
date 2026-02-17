@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import routes
 
-app = FastAPI(title="F1 Race Results API")
+app = FastAPI(title="F1 Stats Explorer API")
 
 app.add_middleware(
     CORSMiddleware,
