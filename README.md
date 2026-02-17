@@ -3,5 +3,5 @@ Data analysis project based on Formula 1 race results using the Jolpica API.
 
 # TODO
 
-- fix the undefined problem for certain positions (drivers and teams)
+- be able to put the actual year as the maximum year we can choose
 - improve the css

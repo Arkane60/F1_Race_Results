@@ -58,23 +58,35 @@ async function loadData() {
 
 function displayDriverStandings(data) {
     const tableDiv = document.getElementById("drivers-table");
-    const races = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
     let html = "<table><tr><th>Position</th><th>Pilote</th><th>Points</th></tr>";
-    for(let d of races) {
+
+    for(let d of data) {
         let name = d.Driver.givenName + " " + d.Driver.familyName;
-        html += `<tr><td>${d.position}</td><td>${name}</td><td>${d.points}</td></tr>`;
+        html += `<tr>
+                    <td>${d.position || "-"}</td>
+                    <td>${name}</td>
+                    <td>${d.points || 0}</td>
+                 </tr>`;
     }
+
     html += "</table>";
     tableDiv.innerHTML = html;
 }
 
 function displayConstructorStandings(data) {
     const tableDiv = document.getElementById("constructors-table");
-    const constructors = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+
     let html = "<table><tr><th>Position</th><th>Constructeur</th><th>Points</th></tr>";
-    for(let c of constructors) {
-        html += `<tr><td>${c.position}</td><td>${c.Constructor.name}</td><td>${c.points}</td></tr>`;
+
+    for(let c of data) {
+        html += `<tr>
+                    <td>${c.position || "-"}</td>
+                    <td>${c.Constructor.name}</td>
+                    <td>${c.points || 0}</td>
+                 </tr>`;
     }
+
     html += "</table>";
     tableDiv.innerHTML = html;
 }

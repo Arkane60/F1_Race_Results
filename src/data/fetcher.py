@@ -9,11 +9,63 @@ def fetch_jolpica_json(path: str):
     resp.raise_for_status()
     return resp.json()
 
+@lru_cache(maxsize=10)
 def get_driver_standings(season: int):
-    return fetch_jolpica_json(f"{season}/driverStandings.json")
+    all_standings = []
+    limit = 100
+    offset = 0
 
+    while True:
+        data = fetch_jolpica_json(
+            f"{season}/driverStandings.json?limit={limit}&offset={offset}"
+        )
+
+        lists = data.get("MRData", {}).get("StandingsTable", {}).get("StandingsLists", [])
+        if not lists:
+            break
+
+        standings_chunk = lists[0].get("DriverStandings", [])
+        if not standings_chunk:
+            break
+
+        all_standings.extend(standings_chunk)
+
+        total = int(data.get("MRData", {}).get("total", 0))
+        offset += limit
+
+        if offset >= total:
+            break
+
+    return all_standings
+
+@lru_cache(maxsize=10)
 def get_constructor_standings(season: int):
-    return fetch_jolpica_json(f"{season}/constructorStandings.json")
+    all_standings = []
+    limit = 100
+    offset = 0
+
+    while True:
+        data = fetch_jolpica_json(
+            f"{season}/constructorStandings.json?limit={limit}&offset={offset}"
+        )
+
+        lists = data.get("MRData", {}).get("StandingsTable", {}).get("StandingsLists", [])
+        if not lists:
+            break
+
+        standings_chunk = lists[0].get("ConstructorStandings", [])
+        if not standings_chunk:
+            break
+
+        all_standings.extend(standings_chunk)
+
+        total = int(data.get("MRData", {}).get("total", 0))
+        offset += limit
+
+        if offset >= total:
+            break
+
+    return all_standings
 
 @lru_cache(maxsize=10)
 def get_all_season_results(season: int):
